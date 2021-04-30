@@ -17,6 +17,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 /**
+ * Based on https://twitter.com/fabpot/status/1387777376898228232
+ *
  * @author Fabien Potenvier <fabien@symfony.com>
  */
 final class NoFlocListener implements EventSubscriberInterface
