@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "symfony/http-kernel": "^4.4.4 || ^5.0.7",
+        "symfony/http-kernel": "^4.4.4 || ^5.1.5",
         "symfony/event-dispatcher": "^4.4 || ^5.0"
     },
     "require-dev": {
