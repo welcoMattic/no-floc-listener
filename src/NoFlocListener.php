@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
  */
 final class NoFlocListener implements EventSubscriberInterface
 {
-    public function addPermissionsPolicyHeader(ResponseEvent $event): void
+    public function onKernelResponse(ResponseEvent $event): void
     {
         $event->getResponse()->headers->set('permissions-policy', 'interest-cohort=()');
     }
@@ -34,7 +34,7 @@ final class NoFlocListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ResponseEvent::class => 'addPermissionsPolicyHeader',
+            ResponseEvent::class => 'onKernelResponse',
         ];
     }
 }

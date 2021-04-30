@@ -38,7 +38,7 @@ final class NoFlocListenerTest extends TestCase
     /**
      * @test
      */
-    public function listenerSetsHeader(): void
+    public function onKernelResponse(): void
     {
         $response = new Response();
 
@@ -51,7 +51,7 @@ final class NoFlocListenerTest extends TestCase
 
         self::assertFalse($event->getResponse()->headers->has('permissions-policy'));
 
-        (new NoFlocListener())->addPermissionsPolicyHeader($event);
+        (new NoFlocListener())->onKernelResponse($event);
 
         self::assertTrue($event->getResponse()->headers->has('permissions-policy'));
         self::assertSame(
