@@ -1,0 +1,43 @@
+{
+    "name": "oskarstark/no-floc-listener",
+    "type": "library",
+    "description": "This library provides an event subscriber to opt-out from FLoC.",
+    "keywords": [
+        "symfony",
+        "response",
+        "floc",
+        "event-listener",
+        "interest-cohort",
+        "permission"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Oskar Stark",
+            "email": "oskarstark@googlemail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "symfony/http-kernel": "^4.4.4 || ^5.0.7",
+        "symfony/event-dispatcher": "^4.4 || ^5.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.18.3",
+        "phpstan/phpstan": "^0.12.85",
+        "phpunit/phpunit": "^9.5.3"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "OskarStark\\Symfony\\EventListener\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OskarStark\\Symfony\\EventListener\\Tests\\": "tests/"
+        }
+    }
+}

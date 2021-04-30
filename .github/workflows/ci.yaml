@@ -1,0 +1,118 @@
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+name: CI
+
+jobs:
+    php-cs-fixer:
+        name: PHP-CS-Fixer (${{ matrix.php-version }})
+
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                php-version:
+                    - '8.0'
+
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@v2.3.4
+
+            - name: Install PHP
+              uses: shivammathur/setup-php@2.10.0
+              with:
+                  coverage: "none"
+                  php-version: ${{ matrix.php-version }}
+                  tools: composer:v2
+
+            - name: "Composer install"
+              uses: "ramsey/composer-install@v1"
+              with:
+                  composer-options: "--prefer-dist"
+
+            - name: "Run friendsofphp/php-cs-fixer"
+              run: "vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --verbose"
+
+    composer-normalize:
+        name: composer-normalize
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@v2
+
+            - name: composer-normalize
+              uses: docker://ergebnis/composer-normalize-action:0.8.0
+
+    phpstan:
+        name: PHPStan (${{ matrix.php-version }})
+
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                php-version:
+                    - '8.0'
+
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@v2.3.4
+
+            - name: Install PHP
+              uses: shivammathur/setup-php@2.10.0
+              with:
+                  coverage: "none"
+                  php-version: ${{ matrix.php-version }}
+                  tools: composer:v2
+
+            - name: "Composer install"
+              uses: "ramsey/composer-install@1.3.0"
+              with:
+                  composer-options: "--prefer-dist"
+
+            - name: "Run phpstan/phpstan"
+              run: "vendor/bin/phpstan analyse -c phpstan.neon.dist"
+
+    tests:
+        name: "PHP ${{ matrix.php-version }} + ${{ matrix.dependencies }}"
+
+        runs-on: ubuntu-latest
+
+        continue-on-error: ${{ matrix.allowed-to-fail }}
+
+        strategy:
+            matrix:
+                php-version:
+                    - '8.0'
+                    - '8.1'
+                dependencies:
+                    - 'lowest'
+                    - 'highest'
+                allowed-to-fail: [false]
+
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@v2
+
+            - name: Install PHP
+              uses: shivammathur/setup-php@2.10.0
+              with:
+                  coverage: "none"
+                  php-version: "${{ matrix.php-version }}"
+                  tools: "composer:v2"
+
+            - name: Add PHPUnit matcher
+              run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+            - name: "Composer install"
+              uses: "ramsey/composer-install@1.3.0"
+              with:
+                  dependency-versions: "${{ matrix.dependencies }}"
+                  composer-options: "--prefer-dist"
+
+            - name: Run tests
+              run: vendor/bin/phpunit -v
